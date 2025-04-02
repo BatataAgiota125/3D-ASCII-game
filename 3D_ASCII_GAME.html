@@ -13,7 +13,8 @@
     <h1>Jogo 3D ASCII</h1>
     <pre id="game"></pre>
     <p>Use W, A, S, D para mover e as setas para girar</p>
-    <script>
+    <script> 
+        // Define the game map layout
         const map = [
             "#########################",
             "#.......................#",
@@ -23,11 +24,20 @@
             "#......................#",
             "#########################"
         ];
+        
+        // Map dimensions
         const mapWidth = map[0].length, mapHeight = map.length;
+        
+        // Player starting position and angle
         let playerX = 3, playerY = 3, playerA = 0;
+        
+        // Field of view, depth perception, and screen resolution
         const fov = Math.PI / 3, depth = 24, screenWidth = 160, screenHeight = 50;
+        
+        // Character shading levels for rendering walls
         const shading = ['@', '&', 'P', '#', 'X', 'o', '.', ' '];
         
+        // Casts a ray to detect wall distance
         function castRay(angle) {
             let distance = 0.1;
             const stepSize = 0.05;
@@ -46,6 +56,7 @@
             return distance;
         }
 
+        // Renders the 3D ASCII game world
         function render() {
             let output = "";
             for (let y = 0; y < screenHeight; y++) {
@@ -65,6 +76,7 @@
             document.getElementById('game').textContent = output;
         }
 
+        // Handles player movement and rotation
         document.addEventListener('keydown', (e) => {
             const moveSpeed = 0.3;
             const rotateSpeed = 0.1;
@@ -93,3 +105,28 @@
     </script>
 </body>
 </html>
+
+<!-- Please, if you can improve the code, send the improved code by email to "nuguetis8@gmail.com".
+
+       _____                    _____                    _____                    _____                    _____                    _____          
+      /\    \                  /\    \                  /\    \                  /\    \                  /\    \                  /\    \         
+     /::\    \                /::\____\                /::\    \                /::\____\                /::\____\                /::\    \        
+     \:::\    \              /:::/    /               /::::\    \              /::::|   |               /:::/    /               /::::\    \       
+      \:::\    \            /:::/    /               /::::::\    \            /:::::|   |              /:::/    /               /::::::\    \      
+       \:::\    \          /:::/    /               /:::/\:::\    \          /::::::|   |             /:::/    /               /:::/\:::\    \     
+        \:::\    \        /:::/____/               /:::/__\:::\    \        /:::/|::|   |            /:::/____/               /:::/__\:::\    \    
+        /::::\    \      /::::\    \              /::::\   \:::\    \      /:::/ |::|   |           /::::\    \               \:::\   \:::\    \   
+       /::::::\    \    /::::::\    \   _____    /::::::\   \:::\    \    /:::/  |::|   | _____    /::::::\____\________    ___\:::\   \:::\    \  
+      /:::/\:::\    \  /:::/\:::\    \ /\    \  /:::/\:::\   \:::\    \  /:::/   |::|   |/\    \  /:::/\:::::::::::\    \  /\   \:::\   \:::\    \ 
+     /:::/  \:::\____\/:::/  \:::\    /::\____\/:::/  \:::\   \:::\____\/:: /    |::|   /::\____\/:::/  |:::::::::::\____\/::\   \:::\   \:::\____\
+    /:::/    \::/    /\::/    \:::\  /:::/    /\::/    \:::\  /:::/    /\::/    /|::|  /:::/    /\::/   |::|~~~|~~~~~     \:::\   \:::\   \::/    /
+   /:::/    / \/____/  \/____/ \:::\/:::/    /  \/____/ \:::\/:::/    /  \/____/ |::| /:::/    /  \/____|::|   |           \:::\   \:::\   \/____/ 
+  /:::/    /                    \::::::/    /            \::::::/    /           |::|/:::/    /         |::|   |            \:::\   \:::\    \     
+ /:::/    /                      \::::/    /              \::::/    /            |::::::/    /          |::|   |             \:::\   \:::\____\    
+ \::/    /                       /:::/    /               /:::/    /             |:::::/    /           |::|   |              \:::\  /:::/    /    
+  \/____/                       /:::/    /               /:::/    /              |::::/    /            |::|   |               \:::\/:::/    /     
+                               /:::/    /               /:::/    /               /:::/    /             |::|   |                \::::::/    /      
+                              /:::/    /               /:::/    /               /:::/    /              \::|   |                 \::::/    /       
+                              \::/    /                \::/    /                \::/    /                \:|   |                  \::/    /        
+                               \/____/                  \/____/                  \/____/                  \|___|                   \/____/         
+                                                                                                                                                       -->
