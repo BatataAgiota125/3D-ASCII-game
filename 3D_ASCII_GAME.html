@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3D ASCII</title>
+    <style>
+        body { font-family: monospace; text-align: center; background: black; color: white; overflow: hidden; }
+        pre { font-size: 10px; line-height: 1; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Jogo 3D ASCII</h1>
+    <pre id="game"></pre>
+    <p>Use W, A, S, D para mover e as setas para girar</p>
+    <script>
+        const map = [
+            "#########################",
+            "#.......................#",
+            "#..##....#####....##...#",
+            "#......................#",
+            "#....##........##.....#",
+            "#......................#",
+            "#########################"
+        ];
+        const mapWidth = map[0].length, mapHeight = map.length;
+        let playerX = 3, playerY = 3, playerA = 0;
+        const fov = Math.PI / 3, depth = 24, screenWidth = 160, screenHeight = 50;
+        const shading = ['@', '&', 'P', '#', 'X', 'o', '.', ' '];
+        
+        function castRay(angle) {
+            let distance = 0.1;
+            const stepSize = 0.05;
+            let hitWall = false;
+            let eyeX = Math.cos(angle), eyeY = Math.sin(angle);
+            
+            while (!hitWall && distance < depth) {
+                let testX = Math.floor(playerX + eyeX * distance);
+                let testY = Math.floor(playerY + eyeY * distance);
+                if (testX < 0 || testX >= mapWidth || testY < 0 || testY >= mapHeight || map[testY][testX] === '#') {
+                    hitWall = true;
+                } else {
+                    distance += stepSize;
+                }
+            }
+            return distance;
+        }
+
+        function render() {
+            let output = "";
+            for (let y = 0; y < screenHeight; y++) {
+                let line = "";
+                for (let x = 0; x < screenWidth; x++) {
+                    let rayAngle = playerA - fov / 2 + (x / screenWidth) * fov;
+                    let distance = castRay(rayAngle);
+                    let wallHeight = Math.floor(screenHeight / distance);
+                    if (y < (screenHeight - wallHeight) / 2) line += " ";
+                    else if (y < (screenHeight + wallHeight) / 2) {
+                        let shadeIndex = Math.min(Math.floor(distance / depth * shading.length), shading.length - 1);
+                        line += shading[shadeIndex];
+                    } else line += ".";
+                }
+                output += line + "\n";
+            }
+            document.getElementById('game').textContent = output;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            const moveSpeed = 0.3;
+            const rotateSpeed = 0.1;
+            if (e.key === 'ArrowLeft') playerA -= rotateSpeed;
+            if (e.key === 'ArrowRight') playerA += rotateSpeed;
+            if (e.key === 'w') {
+                let newX = playerX + Math.cos(playerA) * moveSpeed;
+                let newY = playerY + Math.sin(playerA) * moveSpeed;
+                if (map[Math.floor(newY)][Math.floor(newX)] !== '#') {
+                    playerX = newX;
+                    playerY = newY;
+                }
+            }
+            if (e.key === 's') {
+                let newX = playerX - Math.cos(playerA) * moveSpeed;
+                let newY = playerY - Math.sin(playerA) * moveSpeed;
+                if (map[Math.floor(newY)][Math.floor(newX)] !== '#') {
+                    playerX = newX;
+                    playerY = newY;
+                }
+            }
+            render();
+        });
+        
+        render();
+    </script>
+</body>
+</html>
